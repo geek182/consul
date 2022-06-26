@@ -2,8 +2,33 @@
 - hosts: all
   become: yes
   tasks:
-    - name: install the latest version of the HAProxy
+    - name: Install the latest version of the HAProxy
       yum: 
         name: haproxy 
         state: latest
+
+    - name: Copy haproxy config
+      copy:
+        src: /vagrant/playbooks/files/haproxy.cfg
+        dest: /etc/haproxy/haproxy.cfg
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+
+    - name: Enable service HAProxy
+      systemd:
+        name: haproxy
+        enabled: yes
+
+ # TODO: Add specificy port to selinux
+    - name: Set haproxy_connect_any flag on and keep it persistent across reboots
+      seboolean:
+        name: haproxy_connect_any
+        state: yes
+        persistent: yes
+
+    - name: Start HAProxy
+      systemd:
+        name: haproxy
+        state: started
 
