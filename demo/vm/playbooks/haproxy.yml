@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: install the latest version of the HAProxy
+      yum: 
+        name: haproxy 
+        state: latest
+
