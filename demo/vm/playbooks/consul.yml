@@ -1,0 +1,35 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Add Hashicorp repository
+      yum_repository:
+        name: hashicorp
+        description: Hashicorp repository
+        baseurl: https://rpm.releases.hashicorp.com/fedora/$releasever/$basearch/stable
+        gpgcheck: yes
+        gpgkey: https://rpm.releases.hashicorp.com/gpg
+
+          
+    - name: Install the latest version of the Consul
+      yum: 
+        name: consul
+        state: latest
+
+    - name: Configuring Consul on dev mode
+      copy:
+        src: /vagrant/playbooks/files/consul.service
+        dest: /usr/lib/systemd/system/consul.service
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+
+    - name: Enable service HAProxy
+      systemd:
+        name: consul
+        enabled: yes
+
+    - name: Start consul
+      systemd:
+        name: consul
+        state: started
