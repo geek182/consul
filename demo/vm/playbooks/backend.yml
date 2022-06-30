@@ -2,13 +2,16 @@
 - hosts: all
   become: yes
   tasks:
+    - set_fact:
+        random_ip: "{{ 100 | random }}" # not some random :D
+      run_once: yes
 
     - name: Add an Ethernet connection with static IP configuration
       nmcli:
         conn_name: eth1
         ifname: eth1
         type: ethernet
-        ip4: 192.168.0.11/24
+        ip4: 192.168.0.{{ random_ip }}/24
         gw4: 192.168.0.1
         state: present
 
@@ -26,32 +29,8 @@
         name: consul
         state: latest
 
-    - name: Configuring Consul on dev mode
-      copy:
-        src: /vagrant/playbooks/files/consul.service
-        dest: /usr/lib/systemd/system/consul.service
-        owner: root
-        group: root
-        mode: u=rw,g=r,o=r
-
-    - name: Allow traffic towards the UI
-      firewalld:
-        port: 8500/tcp
-        permanent: yes
-        state: enabled
-
-    - name: reload service firewalld
-      systemd:
-        name: firewalld
-        state: reloaded
-
     - name: Enable service HAProxy
       systemd:
         name: consul
         daemon_reload: yes
         enabled: yes
-
-    - name: Start consul
-      systemd:
-        name: consul
-        state: started

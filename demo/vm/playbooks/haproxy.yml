@@ -7,6 +7,15 @@
         name: haproxy 
         state: latest
 
+    - name: Add an Ethernet connection with static IP configuration
+      nmcli:
+        conn_name: eth1
+        ifname: eth1
+        type: ethernet
+        ip4: 192.168.0.10/24
+        gw4: 192.168.0.1
+        state: present
+
     - name: Copy haproxy config
       copy:
         src: /vagrant/playbooks/files/haproxy.cfg
