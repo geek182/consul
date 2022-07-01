@@ -47,3 +47,11 @@
       systemd:
         name: consul
         state: started
+
+    ## TODO: Replace this task with a .hcl configuration, and let the app name as a parameter so we can register more than app
+    ## Probably have a ansible role just for registering the apps
+    - name: Registering the service for the app.
+      shell:  consul services register -name demo-app-{{ random_ip }} -address 192.168.0.{{ random_ip }}
+
+    ## Call the api/cli and check if service was registered
+    ## consul catalog services
