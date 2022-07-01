@@ -29,8 +29,21 @@
         name: consul
         state: latest
 
-    - name: Enable service HAProxy
+    - name: Configuring Consul agent
+      copy:
+        src: /vagrant/playbooks/files/consul-agent.service
+        dest: /usr/lib/systemd/system/consul.service
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+
+    - name: Enable consul service
       systemd:
         name: consul
         daemon_reload: yes
         enabled: yes
+
+    - name: Start consul
+      systemd:
+        name: consul
+        state: started
