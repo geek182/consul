@@ -28,6 +28,7 @@ Vagrant.configure("2") do |config|
 ####
   config.vm.define "consul" do |consul|
     consul.vm.box = "generic/fedora36"
+    consul.vm.hostname = "consul"
     consul.vm.network "forwarded_port", guest: 8500, host: 8500
     consul.vm.provision "ansible_local" do |ansible|
       ansible.playbook = "/vagrant/playbooks/consul.yml"
@@ -37,6 +38,7 @@ Vagrant.configure("2") do |config|
 ####
   config.vm.define "backend" do |backend|
     backend.vm.box = "generic/fedora36"
+    backend.vm.hostname = "backend-01"
   # Static ip configuration for fedora 36 is not working see:
   # https://github.com/hashicorp/vagrant/issues/12762
   # Workaroung use vm.provision with shell or Ansible playbooks for configuring the static ip

@@ -34,11 +34,17 @@
         group: root
         mode: u=rw,g=r,o=r
 
-    - name: Allow traffic towards the UI
+    - name: Allow traffic towards Consul server
       firewalld:
-        port: 8500/tcp
+        port: "{{ item }}"
         permanent: yes
         state: enabled
+      with_items:
+         - "8301/tcp"
+         - "8500/tcp"
+         - "8600/tcp"
+         - "53/tcp"
+         - "53/udp"
 
     - name: reload service firewalld
       systemd:
