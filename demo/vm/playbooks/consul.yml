@@ -40,6 +40,7 @@
         permanent: yes
         state: enabled
       with_items:
+         - "8300/tcp"
          - "8301/tcp"
          - "8500/tcp"
          - "8600/tcp"
