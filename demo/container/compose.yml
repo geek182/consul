@@ -2,5 +2,27 @@ version: "3.9"
 services:
   consul:
        image: "consul:1.12"
+       #entrypoint: ["consul", "agent", "-server", "-ui", "-node=server-1", "-bootstrap-expect=1", "-client=0.0.0.0", "-data-dir=/tmp"]
+       #entrypoint: ["consul", "agent","-config-dir=/opt/consul", "-data-dir=/tmp"]
+       command: ["agent", "-config-dir=/opt/consul/config"]
        ports:
          - "8500:8500"
+       networks:
+         default:
+           ipv4_address: 10.89.0.100
+       volumes:
+         #- ./conf:/consul/config Permission denied https://github.com/hashicorp/docker-consul/issues/20
+         - ./conf/server/server.hcl:/opt/consul/config/server.hcl
+
+  consul-agent:
+       image: "consul:1.12"
+       #entrypoint: ["consul", "agent", "-retry-join=10.89.0.100", "-client=0.0.0.0", "-data-dir=/tmp"]
+       #entrypoint: ["consul", "agent", "-dev", "-client=0.0.0.0", "-data-dir=/tmp" ]
+       command: ["agent", "-config-dir=/opt/consul/config"]
+       networks:
+         default:
+           ipv4_address: 10.89.0.101
+       volumes:
+               #- ./conf:/consul/config Permission denied
+               - ./conf/agent/agent.hcl:/opt/consul/config/agent.hcl
+
