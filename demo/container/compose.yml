@@ -9,7 +9,8 @@ services:
          - "8500:8500"
        networks:
          default:
-           ipv4_address: 10.89.0.100
+                 #ipv4_address: 10.89.0.100
+           ipv4_address: 10.0.0.100
        volumes:
          #- ./conf:/consul/config Permission denied https://github.com/hashicorp/docker-consul/issues/20
          - ./conf/server/server.hcl:/opt/consul/config/server.hcl
@@ -20,9 +21,27 @@ services:
        #entrypoint: ["consul", "agent", "-dev", "-client=0.0.0.0", "-data-dir=/tmp" ]
        command: ["agent", "-config-dir=/opt/consul/config"]
        networks:
-         default:
-           ipv4_address: 10.89.0.101
+         - default
+       #    ipv4_address: 10.89.0.101
        volumes:
                #- ./conf:/consul/config Permission denied
                - ./conf/agent/agent.hcl:/opt/consul/config/agent.hcl
 
+  backend:
+      image: docker.io/library/httpd
+      #      network_mode: "service:consul-agent" NOT WORKING
+      #depends_on:
+      #  - consul-agent
+      ports:
+        - "8080:80"
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: "10.0.0.0/16"
+          gateway: "10.0.0.1"
+
+# Testing network         
+  mynet:
+   driver: bridge
