@@ -1,6 +1,13 @@
 ## Consul
 labs using consul
 
+## Local lab
+- Podman (if using Windows)
+  - `podman machine start`
+  - redirect docker commands to podman 
+      - powershell: `$Env:DOCKER_HOST = 'npipe:////./pipe/podman-machine-default'`
+      - cmd: `set DOCKER_HOST = 'npipe:////./pipe/podman-machine-default'`
+
 ## Infrastructure
 
 I'm using vagrant to spin up the servers on VirtualBox, and the Ansible playbooks are responsible for the automation to put everything in place.
